@@ -12,29 +12,38 @@ else {
 
 if (isset($_POST[ 'submit' ])) {
     if ($id_user != '') {
-        $id          = create_unique_id();
-        $title       = $_POST[ 'title' ];
-        $title       = filter_var( $title, FILTER_SANITIZE_STRING );
-        $description = $_POST( [ 'description' ] );
-        $description = filter_var( $description, FILTER_SANITIZE_STRING );
-        $rating      = $_POST[ 'rating' ];
-        $rating      = filter_var( $rating, FILTER_SANITIZE_STRING );
+        $id    = create_unique_id();
+        $title = $_POST[ 'title' ];
 
-        $verify_review = $conn->prepare( "SELECT * FROM `reviews` where id_loc = ? and is_user = ?" );
+        $description = $_POST[ 'description' ];
+        $rating      = $_POST[ 'rating' ];
+
+        $verify_review = $conn->prepare( "SELECT * FROM reviews where id_location = ? and id_user = ?" );
         $verify_review->execute( [ $get_id, $id_user ] );
 
         if ($verify_review->rowCount() > 0) {
             $warning_msg[] = 'Your review was allready added!';
             }
         else {
-            $add_review = $conn->prepare( "INSERT INTO `reviews`(id_review, title, rating, id_location, description) VALUES(?,?,?,?,?)" );
-            $add_review->execute( [ $id, $title, $rating, $get_id, $description ] );
-            $msg_succes = 'Review added succesfully!';
+            $add_review = $conn->prepare( "INSERT INTO reviews( title, rating, description, id_user,id_location, id_review) VALUES(?,?,?,?,?,?)" );
+            // $add_review->execute( [ $title, $rating, $description, $id_user, $get_id, $id ] );
+
+            if (!$add_review->execute( [ $title, $rating, $description, $id_user, $get_id, $id ] )) {
+                print_r( $add_review->errorInfo() ); // Afisează detalii despre eroare
+                }
+            // echo $title . '\n';
+
+            // echo $description . '\n';
+            // echo $rating . '\n';
+            // echo $get_id . '\n';
+            // echo $id_user . '\n';
+            // echo $id . '\n';
+            $success_msg[] = 'Review added succesfully!';
             }
 
         }
     else {
-        $warning_msg = 'Please login first!';
+        $warning_msg[] = 'Please login first!';
         }
     }
 
@@ -66,7 +75,7 @@ if (isset($_POST[ 'submit' ])) {
         <p class="placeholder"> Review title<span>*</span></p>
         <input type="text" name="title" required maxlength="50" placeholder="Enter review title" class="box">
         <p class="placeholder"> Review description<span>*</span></p>
-        <textarea type="text" name="title" required maxlength="1000" cols="30" rows="10"
+        <textarea type="text" name="description" required maxlength="1000" cols="30" rows="10"
             placeholder="Enter review description" class="box"></textarea>
 
         <p class="placeholder">Review rating<span>*</span></p>
@@ -90,7 +99,7 @@ if (isset($_POST[ 'submit' ])) {
 <script src="script.js"></script>
 
 
-<?php include 'components/alers.php'; ?>
+<?php include 'components/alerts.php'; ?>
 
 </body>
 

@@ -92,14 +92,19 @@ include 'components/connect.php';
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     while ( $row = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
-                        echo "<div class='location'>";
-                        echo "<img src='{$row[ 'image' ]}' alt='{$row[ 'name' ]}'>";
-                        echo "<h3>{$row[ 'name' ]}</h3>";
-                        echo "<p>{$row[ 'description' ]}</p>";
-                        // echo "<button class='see-button'>Vezi mai multe detalii!!</button>";
-                        echo "<a href='locationReview.php' class='see-button'>Review Page</a>";
-                        echo "</div>";
+
+                        $id_location = $row[ 'location_id' ];
+                        ?>
+                        <div class='location'>
+                            <img src="<?= $row[ 'image' ]; ?>">
+                            <h3><?= $row[ 'name' ]; ?></h3>
+                            <p><?= $row[ 'description' ]; ?></p>
+                            <a href='locationReview.php?get_id=<?= $id_location; ?>' class='see-button'>Review Page</a>
+
+                        </div>
+                        <?php
                         }
+
                     }
                 else {
                     echo "Nu s-au gasit locatii in baza de date!";
@@ -113,6 +118,8 @@ include 'components/connect.php';
             $conn = null;
             ?>
 
+
+
         </div>
 
 
@@ -123,7 +130,7 @@ include 'components/connect.php';
     <!-- custom js file link  -->
     <script src="script.js"></script>
 
-    <?php include 'components/alers.php'; ?>
+    <?php include 'components/alerts.php'; ?>
 
 </body>
 

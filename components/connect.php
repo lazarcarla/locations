@@ -5,14 +5,6 @@ $user   = "postgres";
 $pass   = "carla";
 $dbname = "locations";
 
-// try {
-//     $conn = new PDO( "pgsql: host = $host;port=$port; dbname=$dbname; user=$user; password=$pass" );
-//     $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-//     }
-// catch ( PDOException $e ) {
-//     echo "Eroare la conectarea la baza de date: " . $e->getMessage();
-//     }
-
 $conn = new PDO( "pgsql: host = $host;port=$port; dbname=$dbname; user=$user; password=$pass" );
 
 function create_unique_id()
@@ -26,11 +18,11 @@ function create_unique_id()
     return $random_string;
     }
 
-if (isset($_COOKIE[ 'user_id' ])) {
-    $user_id = $_COOKIE[ 'user_id' ];
+if (isset($_COOKIE[ 'id_user' ])) {
+    $id_user = $_COOKIE[ 'id_user' ];
     }
 else {
-    $user_id = '';
+    $id_user = '';
     }
 
 ?>

@@ -4,35 +4,31 @@ include 'components/connect.php';
 
 if (isset($_POST[ 'submit' ])) {
 
-    $id         = create_unique_id();
+    // $id_user = hexdec( md5( uniqid( mt_rand(), true ) ) );
+
+    $id_user = create_unique_id();
+
     $last_name  = $_POST[ 'last_name' ];
-    $last_name  = filter_var( $last_name, FILTER_SANITIZE_STRING );
     $first_name = $_POST[ 'first_name' ];
-    $first_name = filter_var( $firts_name, FILTER_SANITIZE_STRING );
 
     $email = $_POST[ 'email' ];
-    $email = filter_var( $email, FILTER_SANITIZE_STRING );
     $pass  = password_hash( $_POST[ 'password' ], PASSWORD_DEFAULT );
-    $pass  = filter_var( $pass, FILTER_SANITIZE_STRING );
 
-    $verify_email = $conn->prepare( "SELECT * FROM `users` WHERE email = ?" );
+    $verify_email = $conn->prepare( "SELECT * FROM users WHERE email = ?" );
     $verify_email->execute( [ $email ] );
 
     if ($verify_email->rowCount() > 0) {
         $warning_msg[] = 'Email already taken!';
         }
     else {
-        if ($c_pass == 1) {
-            $insert_user = $conn->prepare( "INSERT INTO `users`(id, last_name,first_name,password, email) VALUES(?,?,?,?,?)" );
-            $insert_user->execute( [ $id, $last_name, $first_name, $pass, $email ] );
-            $success_msg[] = 'Registered successfully!';
-            }
-        else {
-            $warning_msg[] = 'Confirm password not matched!';
-            }
-        }
 
+        $insert_user = $conn->prepare( "INSERT INTO users(id_user,last_name,first_name,password, email) VALUES(?,?,?,?,?)" );
+        $insert_user->execute( [ $id_user, $last_name, $first_name, $pass, $email ] );
+        $success_msg[] = 'Registered successfully!';
+        }
     }
+
+
 
 ?>
 
@@ -60,7 +56,7 @@ if (isset($_POST[ 'submit' ])) {
 
     <section class="container">
         <h1 class="form-title">Register</h1>
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="" method="post">
             <div class="input-group">
                 <i class="fas fa-user"></i>
                 <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
@@ -68,7 +64,7 @@ if (isset($_POST[ 'submit' ])) {
             </div>
             <div class="input-group">
                 <i class="fas fa-user"></i>
-                <input type="text" name="first_Name" id="firstName" placeholder="First Name" required>
+                <input type="text" name="first_name" id="firstName" placeholder="First Name" required>
                 <label for="lName">First Name</label>
             </div>
             <div class="input-group">
@@ -104,9 +100,9 @@ if (isset($_POST[ 'submit' ])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
     <!-- custom js file link  -->
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
 
-    <?php include 'components/alers.php'; ?>
+    <?php include 'components/alerts.php'; ?>
 
 </body>
 

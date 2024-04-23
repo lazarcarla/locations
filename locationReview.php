@@ -1,26 +1,25 @@
 <?php
 include 'components/connect.php';
 
-if (isset($GET[ 'get_id' ])) {
-    $get_id = $GET[ 'get_id' ];
+if (isset($_GET[ 'get_id' ])) {
+    $get_id = $_GET[ 'get_id' ];
     }
 else {
-    $get_id = '';
-    header( 'location: locationsHomepage.php' );
+    // $get_id = '';
+    // header( 'location: locationsHomepage.php' );
     }
 
 if (isset($_POST[ 'delete_review' ])) {
     $delete_id = $_POST[ 'delete_id' ];
-    $delete_id = filter_var( $delete_id, FILTER_SANITIZE_STRING );
 
-    $verify_delete = $conn->prepare( "SELECT * FROM `reviews` WHERE id_review = ?" );
+    $verify_delete = $conn->prepare( "SELECT * FROM reviews WHERE id_review = ?" );
     $verify_delete->execute( [ $delete_id ] );
 
     if ($verify_delete->rowCount() > 0) {
-        $delete_review = $conn->prepare( "DELETE FROM `reviews` WHERE id_review=?" );
+        $delete_review = $conn->prepare( "DELETE FROM reviews WHERE id_review=?" );
         $delete_review->execute( [ $delete_id ] );
 
-        $msg_succes[] = 'Review added succesfully!';
+        $success_msg[] = 'Review added succesfully!';
 
         }
     else {
@@ -55,7 +54,7 @@ if (isset($_POST[ 'delete_review' ])) {
         </div>
 
         <?php
-        $select_location = $conn->prepare( "SELECT * FROM 'loc' WHERE id_location = ? LIMIT 1" );
+        $select_location = $conn->prepare( "SELECT * FROM loc WHERE location_id = ? LIMIT 1" );
         $select_location->execute( [ $get_id ] );
         if ($select_location->rowCount() > 0) {
             while ( $fetch_location = $select_location->fetch( PDO::FETCH_ASSOC ) ) {
@@ -66,7 +65,7 @@ if (isset($_POST[ 'delete_review' ])) {
                 $rating_4      = 0;
                 $rating_5      = 0;
 
-                $select_rating = $conn->prepare( "SELECT * FROM `reviews` WHERE id_location = ?" );
+                $select_rating = $conn->prepare( "SELECT * FROM reviews WHERE id_location = ?" );
 
                 $select_rating->execute( [ $fetch_location[ 'id_location' ] ] );
                 $total_reviews = $select_rating->rowCount();
@@ -163,7 +162,7 @@ if (isset($_POST[ 'delete_review' ])) {
         <div class="box-container">
 
             <?php
-            $select_reviews = $conn->prepare( "SELECT * FROM `reviews` WHERE id_location = ?" );
+            $select_reviews = $conn->prepare( "SELECT * FROM reviews WHERE id_location = ?" );
             $select_reviews->execute( [ $get_id ] );
             if ($select_reviews->rowCount() > 0) {
                 while ( $fetch_review = $select_reviews->fetch( PDO::FETCH_ASSOC ) ) {
@@ -173,7 +172,7 @@ if (isset($_POST[ 'delete_review' ])) {
                         }
                     ; ?>>
                         <?php
-                        $select_user = $conn->prepare( "SELECT * FROM `users` WHERE id_user = ?" );
+                        $select_user = $conn->prepare( "SELECT * FROM users WHERE id_user = ?" );
                         $select_user->execute( [ $fetch_review[ 'id_user' ] ] );
                         while ( $fetch_user = $select_user->fetch( PDO::FETCH_ASSOC ) ) {
                             ?>
@@ -183,10 +182,7 @@ if (isset($_POST[ 'delete_review' ])) {
                                 <h3><?= substr( $fetch_user[ 'name' ], 0, 1 ); ?></h3>
                             <?php }
                         ; ?>
-                            <div>
-                                <p><?= $fetch_user[ 'name' ]; ?></p>
-                                <span><?= $fetch_review[ 'date' ]; ?></span>
-                            </div>
+
                         </div>
                     <?php }
                 ; ?>
