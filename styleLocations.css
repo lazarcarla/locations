@@ -1,0 +1,148 @@
+body{
+
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url("img-oc.jpg");
+}
+.containerLoc {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    /* background-color: transparent; */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 50px;
+    opacity: 0.8;
+}
+
+h2 {
+    text-align: center;
+}
+.search-bar {
+    margin-bottom: 20px;
+}
+.locations {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 20px;
+}
+.location {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    cursor: pointer; 
+}
+.location h3 {
+    margin-top: 0;
+}
+.location img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.see-button {
+    background-color: #7dd1ed;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 20px auto;
+    margin-top: 20px;
+}
+.see-button:hover {
+    opacity: 0.8;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    /* width: 100%; */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f8f8f8;
+    outline: none;
+}
+
+#searchInput:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.logout-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background-color: #7dd1ed;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.logout-button:hover{
+    opacity: 0.8;
+}
+/* 
+.navbar {
+    background-color: #f2f2f2;
+    padding: 10px;
+}
+.navbar-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+} */
+
+.login-button{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background-color: #7dd1ed;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-button:hover{
+    opacity: 0.8;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(228, 135, 135);
+    opacity: 0.8;
+  }
+
+  li {
+    float: right;
+    display: inline;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  /* Change the link color to #111 (black) on hover */
+  li a:hover {
+    opacity: 0.8;
+  }
