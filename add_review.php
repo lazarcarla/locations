@@ -6,46 +6,65 @@ if (isset($_GET[ 'get_id' ])) {
 
     }
 else {
-    $get_id = '';
+    // $get_id = '';
     header( 'location:locationsHomepage.php' );
+    exit();
     }
 
 if (isset($_POST[ 'submit' ])) {
-    if ($id_user != '') {
+    if (!empty($id_user)) {
         $id    = create_unique_id();
         $title = $_POST[ 'title' ];
 
         $description = $_POST[ 'description' ];
         $rating      = $_POST[ 'rating' ];
 
-        $verify_review = $conn->prepare( "SELECT * FROM reviews where id_location = ? and id_user = ?" );
-        $verify_review->execute( [ $get_id, $id_user ] );
+        // $title       = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+        // $description = filter_input( INPUT_POST, 'description', FILTER_SANITIZE_STRING );
+        // $rating      = filter_input( INPUT_POST, 'rating', FILTER_SANITIZE_STRING );
 
-        if ($verify_review->rowCount() > 0) {
-            $warning_msg[] = 'Your review was allready added!';
+        // $verify_review = $conn->prepare( "SELECT * FROM reviews where id_location = ? and id_user = ?" );
+        // $verify_review->execute( [ $get_id, $id_user ] );
+
+        // if ($verify_review->rowCount() > 0) {
+        //     $warning_msg[] = 'Your review was allready added!';
+        //     }
+        // else {
+        if ($title && $description && $rating && $get_id) {
+            $id         = create_unique_id();
+            $add_review = $conn->prepare( "INSERT INTO reviews ( title, id_user,id_location, id_review, rating, description) VALUES(?,?,?,?,?,?)" );
+
+            if ($add_review->execute( [ $title, $id_user, $get_id, $id, $rating, $description ] )) {
+
+                $success_msg[] = 'Review added succesfully!';
+                }
+            else {
+                $warning_msg[] = 'Failed to add review!';
+                }
             }
         else {
-            $add_review = $conn->prepare( "INSERT INTO reviews( title, rating, description, id_user,id_location, id_review) VALUES(?,?,?,?,?,?)" );
-            // $add_review->execute( [ $title, $rating, $description, $id_user, $get_id, $id ] );
-
-            if (!$add_review->execute( [ $title, $rating, $description, $id_user, $get_id, $id ] )) {
-                print_r( $add_review->errorInfo() ); // Afisează detalii despre eroare
-                }
-            // echo $title . '\n';
-
-            // echo $description . '\n';
-            // echo $rating . '\n';
-            // echo $get_id . '\n';
-            // echo $id_user . '\n';
-            // echo $id . '\n';
-            $success_msg[] = 'Review added succesfully!';
+            $warning_msg[] = 'Please fill the required fields correctly!';
             }
+        // $add_review = $conn->prepare( "INSERT INTO reviews ( title, description, id_user,id_location, id_review, rating) VALUES(?,?,?,?,?,?)" );
+        // $add_review->execute( [ $title, $description, $id_user, $get_id, $id, $rating ] );
 
+        // if (!$add_review->execute( [ $title, $description, $id_user, $get_id, $id, $rating ] )) {
+        //     print_r( $add_review->errorInfo() ); // Afisează detalii despre eroare
+        //     }
+        // echo $title . '\n';
+
+        // echo $description . '\n';
+        // echo $rating . '\n';
+        // echo $get_id . '\n';
+        // echo $id_user . '\n';
+        // echo $id . '\n';
+        // $success_msg[] = 'Review added succesfully!';
         }
     else {
         $warning_msg[] = 'Please login first!';
         }
     }
+// }
 
 ?>
 

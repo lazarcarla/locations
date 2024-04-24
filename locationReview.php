@@ -5,8 +5,8 @@ if (isset($_GET[ 'get_id' ])) {
     $get_id = $_GET[ 'get_id' ];
     }
 else {
-    // $get_id = '';
-    // header( 'location: locationsHomepage.php' );
+    $get_id = '';
+    header( 'location: locationsHomepage.php' );
     }
 
 if (isset($_POST[ 'delete_review' ])) {
@@ -19,7 +19,7 @@ if (isset($_POST[ 'delete_review' ])) {
         $delete_review = $conn->prepare( "DELETE FROM reviews WHERE id_review=?" );
         $delete_review->execute( [ $delete_id ] );
 
-        $success_msg[] = 'Review added succesfully!';
+        $success_msg[] = 'Review deleted succesfully!';
 
         }
     else {
@@ -42,6 +42,8 @@ if (isset($_POST[ 'delete_review' ])) {
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 
 </head>
 
@@ -49,9 +51,9 @@ if (isset($_POST[ 'delete_review' ])) {
     <?php include 'components/header.php'; ?>
 
     <section class="view-post">
-        <div class="heading">
+        <!-- <div class="heading">
             <h1>Location Details</h1><a href="locationsHomepage.php">All locations</a>
-        </div>
+        </div> -->
 
         <?php
         $select_location = $conn->prepare( "SELECT * FROM loc WHERE location_id = ? LIMIT 1" );
@@ -67,7 +69,7 @@ if (isset($_POST[ 'delete_review' ])) {
 
                 $select_rating = $conn->prepare( "SELECT * FROM reviews WHERE id_location = ?" );
 
-                $select_rating->execute( [ $fetch_location[ 'id_location' ] ] );
+                $select_rating->execute( [ $fetch_location[ 'location_id' ] ] );
                 $total_reviews = $select_rating->rowCount();
                 while ( $fetch_rating = $select_rating->fetch( PDO::FETCH_ASSOC ) ) {
                     $total_ratings += $fetch_rating[ 'rating' ];
@@ -87,7 +89,6 @@ if (isset($_POST[ 'delete_review' ])) {
                         $rating_5 += $fetch_rating[ 'rating' ];
                         }
                     }
-
                 if ($total_reviews != 0) {
                     $average = round( $total_ratings / $total_reviews, 1 );
                     }
@@ -99,13 +100,13 @@ if (isset($_POST[ 'delete_review' ])) {
                 ?>
                 <div class="row">
                     <div class="col">
-                        <h3 class="title"><?= $fetch_post[ 'title' ]; ?></h3>
+                        <h3 class="title"><?= $fetch_location[ 'name' ]; ?></h3>
                     </div>
                     <div class="col">
                         <div class="flex">
                             <div class="total-reviews">
                                 <h3><?= $average; ?><i class="fas fa-star"></i></h3>
-                                <p><?= $total_reivews; ?> reviews</p>
+                                <p><?= $total_reviews; ?> reviews</p>
                             </div>
                             <div class="total-ratings">
                                 <p>
@@ -114,29 +115,29 @@ if (isset($_POST[ 'delete_review' ])) {
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
-                                    <span><?= $rating_5; ?></span>
+                                    <span><?= 5 ?></span>
                                 </p>
                                 <p>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
-                                    <span><?= $rating_4; ?></span>
+                                    <span><?= 4 ?></span>
                                 </p>
                                 <p>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
-                                    <span><?= $rating_3; ?></span>
+                                    <span><?= 3 ?></span>
                                 </p>
                                 <p>
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
-                                    <span><?= $rating_2; ?></span>
+                                    <span><?= 2 ?></span>
                                 </p>
                                 <p>
                                     <i class="fas fa-star"></i>
-                                    <span><?= $rating_1; ?></span>
+                                    <span><?= 1 ?></span>
                                 </p>
                             </div>
                         </div>
@@ -155,8 +156,8 @@ if (isset($_POST[ 'delete_review' ])) {
     <section class="reviews-container">
 
         <div class="heading">
-            <h1>User's reviews</h1> <a href="add_review.php?get_id=<?= $get_id; ?>" class="inline-btn"
-                style="margin-top: 0;">add review</a>
+            <a href="add_review.php?get_id=<?= $get_id; ?>" class="inline-btn" style="margin-top: 0;">add review</a>
+
         </div>
 
         <div class="box-container">
@@ -167,7 +168,7 @@ if (isset($_POST[ 'delete_review' ])) {
             if ($select_reviews->rowCount() > 0) {
                 while ( $fetch_review = $select_reviews->fetch( PDO::FETCH_ASSOC ) ) {
                     ?>
-                    <div class="box" <?php if ($fetch_review[ 'id_user' ] == $user_id) {
+                    <div class="box" <?php if ($fetch_review[ 'id_user' ] == $id_user) {
                         echo 'style="order: -1;"';
                         }
                     ; ?>>
@@ -177,64 +178,78 @@ if (isset($_POST[ 'delete_review' ])) {
                         while ( $fetch_user = $select_user->fetch( PDO::FETCH_ASSOC ) ) {
                             ?>
                             <div class="user">
+                                <p><?= $fetch_user[ "first_name" ] . '' . $fetch_user[ "last_name" ]; ?></p>
+                            </div>
+
+                        <?php }
+                        ; ?>
 
 
-                                <h3><?= substr( $fetch_user[ 'name' ], 0, 1 ); ?></h3>
+
+                        <div class="ratings">
+                            <?php if (isset($fetch_review[ 'rating' ]) && $fetch_review[ 'rating' ] == 1) { ?>
+                                <p style="background:var(--red);"><i class="fas fa-star"></i>
+                                    <span><?= $fetch_review[ 'rating' ]; ?></span>
+                                </p>
+
                             <?php }
+                            ; ?>
+                            <?php if (isset($fetch_review[ 'rating' ]) && $fetch_review[ 'rating' ] == 2) { ?>
+                                <p style="background:var(--orange);"><i class="fas fa-star"></i>
+                                    <span><?= $fetch_review[ 'rating' ]; ?></span>
+                                </p>
+                            <?php }
+                            ; ?>
+
+                            <?php if (isset($fetch_review[ 'rating' ]) && $fetch_review[ 'rating' ] == 3) { ?>
+                                <p style="background:var(--orange);"><i class="fas fa-star"></i>
+                                    <span><?= $fetch_review[ 'rating' ]; ?></span>
+                                </p>
+                            <?php }
+                            ; ?>
+
+                            <?php if (isset($fetch_review[ 'rating' ]) && $fetch_review[ 'rating' ] == 4) { ?>
+                                <p style="background:var(--main-color);"><i class="fas fa-star"></i>
+                                    <span><?= $fetch_review[ 'rating' ]; ?></span>
+                                </p>
+                            <?php }
+                            ; ?>
+
+                            <?php if (isset($fetch_review[ 'rating' ]) && $fetch_review[ 'rating' ] == 5) { ?>
+                                <p style="background:var(--main-color);"><i class="fas fa-star"></i>
+                                    <span><?= $fetch_review[ 'rating' ]; ?></span>
+                                </p>
+                            <?php }
+                            ; ?>
+                        </div>
+                        <?php if ($fetch_review && isset($fetch_review[ 'title' ])) { ?>
+                            <h3 class="title"><?= $fetch_review[ 'title' ]; ?></h3>
+                        <?php }
                         ; ?>
 
-                        </div>
-                    <?php }
-                ; ?>
-                    <div class="ratings">
-                        <?php if ($fetch_review[ 'rating' ] == 1) { ?>
-                            <p style="background:var(--red);"><i class="fas fa-star"></i>
-                                <span><?= $fetch_review[ 'rating' ]; ?></span>
-                            </p>
+                        <?php if ($fetch_review && isset($fetch_review[ 'description' ]) && $fetch_review[ 'description' ] != '') { ?>
+                            <p class="description"><?= $fetch_review[ 'description' ]; ?></p>
                         <?php }
                         ; ?>
-                        <?php if ($fetch_review[ 'rating' ] == 2) { ?>
-                            <p style="background:var(--orange);"><i class="fas fa-star"></i>
-                                <span><?= $fetch_review[ 'rating' ]; ?></span>
-                            </p>
-                        <?php }
-                        ; ?>
-                        <?php if ($fetch_review[ 'rating' ] == 3) { ?>
-                            <p style="background:var(--orange);"><i class="fas fa-star"></i>
-                                <span><?= $fetch_review[ 'rating' ]; ?></span>
-                            </p>
-                        <?php }
-                        ; ?>
-                        <?php if ($fetch_review[ 'rating' ] == 4) { ?>
-                            <p style="background:var(--main-color);"><i class="fas fa-star"></i>
-                                <span><?= $fetch_review[ 'rating' ]; ?></span>
-                            </p>
-                        <?php }
-                        ; ?>
-                        <?php if ($fetch_review[ 'rating' ] == 5) { ?>
-                            <p style="background:var(--main-color);"><i class="fas fa-star"></i>
-                                <span><?= $fetch_review[ 'rating' ]; ?></span>
-                            </p>
+                        <?php if ($fetch_review && isset($fetch_review[ 'id_user' ]) && $fetch_review[ 'id_user' ] == $id_user) { ?>
+                            <form action="" method="post" class="flex-btn">
+                                <input type="hidden" name="delete_id" value="<?= $fetch_review[ 'id_review' ]; ?>">
+                                <a href="update_review.php?get_id=<?= $fetch_review[ 'id_review' ]; ?>" class="inline-option-btn"><i
+                                        class="fas fa-edit"></i> edit
+                                    review</a>
+                                <!-- <input type="submit" value="delete review" class="inline-delete-btn" name="delete_review"
+                                    onclick="return confirm('delete this review?');"> -->
+                                <button type="submit" class="inline-delete-btn" name="delete_review"
+                                    onclick="return confirm('Delete this review?');">
+                                    <i class="fas fa-trash-alt"></i> Delete Review
+                                </button>
+                            </form>
                         <?php }
                         ; ?>
                     </div>
-                    <h3 class="title"><?= $fetch_review[ 'title' ]; ?></h3>
-                    <?php if ($fetch_review[ 'description' ] != '') { ?>
-                        <p class="description"><?= $fetch_review[ 'description' ]; ?></p>
-                    <?php }
-                    ; ?>
-                    <?php if ($fetch_review[ 'id_user' ] == $user_id) { ?>
-                        <form action="" method="post" class="flex-btn">
-                            <input type="hidden" name="delete_id" value="<?= $fetch_review[ 'id' ]; ?>">
-                            <a href="update_review.php?get_id=<?= $fetch_review[ 'id' ]; ?>" class="inline-option-btn">edit
-                                review</a>
-                            <input type="submit" value="delete review" class="inline-delete-btn" name="delete_review"
-                                onclick="return confirm('delete this review?');">
-                        </form>
-                    <?php }
-                    ; ?>
-                </div>
-                <?php
+
+                    <?php
+                    }
                 }
             else {
                 echo '<p class="empty">no reviews added yet!</p>';
@@ -242,6 +257,7 @@ if (isset($_POST[ 'delete_review' ])) {
             ?>
 
         </div>
+
 
     </section>
 
@@ -252,7 +268,7 @@ if (isset($_POST[ 'delete_review' ])) {
     <!-- custom js file link  -->
     <script src="script.js"></script>
 
-    <?php include 'components/alers.php'; ?>
+    <?php include 'components/alerts.php'; ?>
 
 </body>
 

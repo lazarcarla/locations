@@ -23,57 +23,6 @@ include 'components/connect.php';
     <?php include 'components/header.php';
     ?>
 
-    <!-- <ul>
-        
-        // if (isset($_COOKIE[ 'id_user' ]) || isset($_SESSION[ 'id_user' ])) {
-        //     echo '<li><a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout></a></li>';
-        //     }
-        // else {
-        //     echo '<li><a href="login.php"><i class="fas fa-user"></i>Login></a></li>';
-        //     }
-     
-        ?>
-    </ul> -->
-    <!-- <section class="containerLoc">
-
-    <div class="containerLoc">
-        <h2>Locații Turistice Exotice</h2>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Caută o locație..." onkeyup="searchLocations()">
-        </div>
-        <div class="locations">
-            
-            // include 'components/connect.php';
-
-            // try {
-            //     $query = "SELECT * FROM loc";
-            //     $stmt  = $conn->prepare( $query );
-            //     $stmt->execute();
-            //     if ($stmt->rowCount() > 0) {
-            //         while ( $row = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
-            //             echo "<div class='location'>";
-            //             echo "<img src='{$row[ 'image' ]}' alt='{$row[ 'name' ]}'>";
-            //             echo "<h3>{$row[ 'name' ]}</h3>";
-            //             echo "<p>{$row[ 'description' ]}</p>";
-            //             echo "<button class='see-button'>Vezi mai multe detalii!!</button>";
-            //             echo "</div>";
-            //             }
-            //         }
-            //     else {
-            //         echo "Nu s-au gasit locatii in baza de date!";
-            //         }
-
-            //     }
-            // catch ( PDOException $e ) {
-            //     echo "Eroare la interogarea bazei de date: " . $e->getMessage();
-            //     }
-
-            // $conn = null;
-
-
-            ?> -->
-
-    <!-- view all posts section starts  -->
 
     <section class="containerLoc">
 
@@ -95,7 +44,7 @@ include 'components/connect.php';
 
                         $id_location = $row[ 'location_id' ];
                         ?>
-                        <div class='location'>
+                        <div class='location' style='background-color: white'>
                             <img src="<?= $row[ 'image' ]; ?>">
                             <h3><?= $row[ 'name' ]; ?></h3>
                             <p><?= $row[ 'description' ]; ?></p>
